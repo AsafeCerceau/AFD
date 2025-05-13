@@ -1,0 +1,85 @@
+# 1 ) Linguagem: Palavras que terminam com a letra 'a'.
+# Exemplo válido: "casa" – Inválido: "caso"
+
+input: 'caso'
+blank: ' '
+start state: q1
+table:
+ q1:
+  [A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,X,W,Y,Z]: R
+  [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,w,y,z]: R
+  [0,1,2,3,4,5,6,7,8,9]: R
+  ' ': {L: q2} #Se não terminar com 'a', volta pra última letra e encerra o código
+ q2:
+  'a': {R: final } # Se terminar com 'a', vai para a direita (espaço em branco) e finaliza
+ final:
+
+#2) Cadeias que contêm exatamente três caracteres '1'.
+#Exemplo válido: "10101" – Inválido: "110A"
+
+input: '11AZaz00az'
+blank: ' '
+start state: q1
+table:
+ q1:
+  [A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,X,W,Y,Z]: R
+  [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,w,y,z]: R
+  [0,2,3,4,5,6,7,8,9]: R
+  '1': {R: q2}
+ q2:
+  [A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,X,W,Y,Z]: R
+  [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,w,y,z]: R
+  [0,2,3,4,5,6,7,8,9]: R
+  '1': {R: q3}
+ q3:
+  [A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,X,W,Y,Z]: R
+  [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,w,y,z]: R
+  [0,2,3,4,5,6,7,8,9]: R
+  '1': {R: final}
+  #Se a cadeia tem '1', ela finaliza
+  #Se a cadeia tem menos de 3 '1', ela continua e encerra
+  #Se tem mais de 3 '1', ela encerra
+ final:
+
+#3) Cadeias que não contêm dois zeros consecutivos.
+#Exemplo válido: "101010" – Inválido: "1001"
+
+input: '11010101010101'
+blank: ' '
+start state: q1
+table:
+ q1:
+  [A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,X,W,Y,Z]: R
+  [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,w,y,z]: R
+  [1,2,3,4,5,6,7,8,9]: R
+  '0': {R: q2}
+ q2:
+  '0': {L: leitura1} # Se começar com 0, volta 1 casa
+  [A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,X,W,Y,Z]: {R: q1}
+  [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,w,y,z]: {R: q1}
+  [1,2,3,4,5,6,7,8,9]: {R: q1}
+ leitura1:
+  '0': {R : final} #Se começar com 0, encerra. Diretamente ligado ao q2
+  [A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,X,W,Y,Z]: {R: q1}
+  [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,x,w,y,z]: {R: q1}
+  [1,2,3,4,5,6,7,8,9]: {R: q1}
+ final:
+
+#4) Palavras com parênteses balanceados.
+#Exemplo válido: "((()))" – Inválido: "(()"
+
+Resolução:
+
+input: '((()))'
+blank: ' '
+start state: ABREP
+table:
+  ABREP:  
+   '(' : R
+   ')' : { write: '#' , L: FECHAP } # substitui ')' por '#' e vai pra esquerda
+   '#' : R
+  FECHAP:
+   '(' : { write: '#' , R: ABREP } #substitui '(' por '#' e vai pra direita
+   '#' : L
+   
+   #O Loop segue até todos os '(' e ')' serem substituidos
