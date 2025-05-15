@@ -162,3 +162,43 @@ table:
     
   accept:
   reject:
+
+
+#7)  palavra específica
+#Exemplo válido: "radar" – Inválido: "robot"
+
+input: 'radar'
+blank: ' '
+start state: q0
+synonyms:
+  accept: {R: accept}
+  reject: {R: reject}
+
+table:
+  q0:
+    'r': {R: q1}
+    [' ',a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,s,u,t,v,w,x,y,z]: reject
+
+  q1:
+    'a': {R: q2}
+    [' ',b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,u,t,v,w,x,y,z]: reject
+  
+  q2:
+    'd': {R: q3}
+    [' ',a,b,c,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,u,t,v,w,x,y,z]: reject
+  
+  q3:
+    'a': {R: q4}
+    [' ',b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,u,t,v,w,x,y,z]: reject
+  
+  q4:
+    'r': {R: q5}
+    [' ',a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,s,u,t,v,w,x,y,z]: reject
+  
+  q5:  
+    ' ': {L: accept}
+    [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,u,t,v,w,x,y,z]: reject
+  
+  accept:
+  reject:
+  
