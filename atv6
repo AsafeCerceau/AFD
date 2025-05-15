@@ -83,3 +83,46 @@ table:
    '#' : L
    
    #O Loop segue até todos os '(' e ')' serem substituidos
+
+
+#5) Palíndromos com alfabeto {a, b} de tamanho par.
+#Exemplo válido: "abba" – Inválido: "abab"
+
+#Resolução Parciel - Melhore ou Adapte a solução abaixo:# solução do site https://turingmachine.io/
+
+input: 'baab' 
+blank: ' '
+start state: start
+synonyms:
+  accept: {R: accept}
+  reject: {R: reject}
+
+table:
+  start:
+    a: {write: ' ', R: haveA}
+    b: {write: ' ', R: haveB}
+    ' ': accept # string vazio, palíndromo válido
+    
+  haveA:
+    [a,b]: R
+    ' ': {L: matchA} #Ao chegar ano fim, volta uma posição à esquerda e compara o caractere com o que foi lido no começo.
+    
+  haveB:
+    [a,b]: R
+    ' ': {L: matchB}
+    
+  matchA:
+    a: {write: ' ', L: back} #se achar 'a' no final, apaga e vai pra esquerda
+    b: reject #se achar 'b', rejeita
+    ' ': reject #Se sobra um símbolo sozinho, rejeita
+    
+  matchB:
+    b: {write: ' ', L: back} 
+    a: reject
+    ' ': reject
+    
+  back:
+    [a,b]: L
+    ' ': {R: start}
+  accept:
+  reject:
