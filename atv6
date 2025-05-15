@@ -126,3 +126,39 @@ table:
     ' ': {R: start}
   accept:
   reject:
+
+
+#6) Toda a que vem deve ser seguida por dois b.
+#Exemplo válido: "abbabb" – Inválido: "ababb"
+
+input: 'abbab'
+blank: ' '
+start state: verify
+synonyms:
+  accept: {R: accept}
+  reject: {R: reject}
+  
+table:
+
+  verify: #Verifica se o primeiro espaço está em branco
+    ' ': {R: verify} #Pula todos os espaços em branco no começo
+    'a': {R: q1} #verifica 'a'
+    'b': {R: q0} #verifica 'b'
+    
+  q0:
+    'a': {R: q1} #verifica 'a'
+    'b': {R: q0} #verifica 'b'
+    ' ': {L: accept} #verifica fim da palavra
+    
+  q1:
+    'b': {R: q2} #1° 'b' encontrado
+    'a': reject #rejeita se 'a'
+    ' ': reject #rejeita se for vazio
+
+  q2:
+    'b': {R: q0} #2° 'b' encontrado, volta para o fluxo
+    'a': reject #rejeita se 'a'
+    ' ': reject #rejeita se for vazio
+    
+  accept:
+  reject:
