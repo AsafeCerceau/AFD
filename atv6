@@ -202,3 +202,51 @@ table:
   accept:
   reject:
   
+#8) Mesma quantidade de símbolos de entrada
+#Exemplo válido: "001122" – Inválido: "0011222"
+
+input: '00111222'
+blank: ' '
+start state: busca0
+synonyms:
+  accept: {R: accept}
+  reject: {R: reject}
+
+table:
+  busca0:
+    '0': {write: 'X', R: busca1} # Se achar '0', troca por 'X" e começa a procurar '1'
+    'X': {R: busca0}
+    'Y': {R: busca0} #Se encontrar [X,Y,Z], continua procurando
+    'Z': {R: busca0}
+    ' ': {R: verificaFim} # acabou os 0s, verificar se os outros acabaram também
+
+  busca1:
+    '0': {R: busca1} #Pula os '0' e 'X' até achar '1'
+    'X': {R: busca1}
+    '1': {write: 'Y', R: busca2} #Achando '1', troca por 'Y' e vai buscar por '2'
+    'Y': {R: busca1}
+    'Z': {R: busca1} #Pula [Y,Z] até achar '1'
+    ' ': reject # faltou '1' // Se não achar '1', a cadeia é rejeitada.
+
+  busca2:
+    '0': {R: busca2}
+    '1': {R: busca2}
+    'X': {R: busca2}
+    'Y': {R: busca2} #Ignora tudo até achar '2'
+    '2': {write: 'Z', L: volta} #troca '2' por 'Z' e volta pro início
+    'Z': {R: busca2}
+    ' ': reject # faltou '2' // Se não achar '1', a cadeira é rejeitada.
+
+  volta: #Aqui volta pro início de tudo
+    [X,Y,Z,0,1,2]: L #vai pra esquerda até o começo
+    ' ': {R: busca0} #e começa o processo novamente
+
+  verificaFim:
+    'X': {R: verificaFim}
+    'Y': {R: verificaFim}
+    'Z': {R: verificaFim} #Verifica se todos os números foram trocado por símbolos
+    ' ': accept #caso sim, o caso é aceito
+    [0,1,2]: reject # ainda tem símbolo não processado
+
+  accept:
+  reject:
